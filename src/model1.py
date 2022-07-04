@@ -10,11 +10,15 @@ from datasets import load_dataset, Dataset
 from transformers import AutoTokenizer, TFAutoModelForSequenceClassification
 from transformers import DataCollatorWithPadding, create_optimizer
 
+# source: https://huggingface.co/docs/transformers/training
+
 PT_TRANSFORMER = "cardiffnlp/twitter-roberta-base-sentiment-latest"
 
 tokenizer = AutoTokenizer.from_pretrained(PT_TRANSFORMER)
 
 model = TFAutoModelForSequenceClassification.from_pretrained(PT_TRANSFORMER)
+
+# model.predict(tokenizer("I love you!"))
 
 # read in dataset
 ds = load_dataset('csv', data_files='../data/ds1.csv')
@@ -74,6 +78,5 @@ model.compile(
     metrics=tf.metrics.SparseCategoricalAccuracy(),
 )
 
-# problem is here -- unable to fine tune Text Classification model with .fit()
 model.fit(x=tf_train_dataset, validation_data=tf_validation_dataset, epochs=3)
 
